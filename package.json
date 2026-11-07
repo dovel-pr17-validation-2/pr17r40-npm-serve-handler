@@ -59,7 +59,7 @@
     "pre-commit": "lint-staged"
   },
   "dependencies": {
-    "bytes": "3.0.0",
+    "bytes": "3.1.2",
     "content-disposition": "0.5.2",
     "mime-types": "2.1.18",
     "minimatch": "3.1.5",
