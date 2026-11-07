@@ -40,7 +40,7 @@ const getDirectoryContents = async (location, sub, exclude = []) => {
 		content.unshift('..');
 	}
 
-	return content.filter(item => !excluded.includes(item));
+	return content.filter((item) => !excluded.includes(item));
 };
 
 test('render html directory listing', async () => {
@@ -53,7 +53,7 @@ test('render html directory listing', async () => {
 	const type = response.headers.get('content-type');
 
 	expect(type).toBe('text/html; charset=utf-8');
-	expect(contents.every(item => text.includes(item))).toBe(true);
+	expect(contents.every((item) => text.includes(item))).toBe(true);
 });
 
 test('render json directory listing', async () => {
@@ -71,7 +71,7 @@ test('render json directory listing', async () => {
 
 	const {files} = await response.json();
 
-	const existing = files.every(file => {
+	const existing = files.every((file) => {
 		const full = file.base.replace('/', '');
 		return contents.includes(full);
 	});
@@ -91,7 +91,7 @@ test('render html sub directory listing', async () => {
 	const type = response.headers.get('content-type');
 	expect(type).toBe('text/html; charset=utf-8');
 
-	expect(contents.every(item => text.includes(item))).toBe(true);
+	expect(contents.every((item) => text.includes(item))).toBe(true);
 });
 
 test('render json sub directory listing', async () => {
@@ -112,7 +112,7 @@ test('render json sub directory listing', async () => {
 
 	const {files} = await response.json();
 
-	const existing = files.every(file => {
+	const existing = files.every((file) => {
 		const full = file.base.replace('/', '');
 		return contents.includes(full);
 	});
@@ -150,7 +150,7 @@ test('render json sub directory listing with custom stat handler', async () => {
 
 	const {files} = await response.json();
 
-	const existing = files.every(file => {
+	const existing = files.every((file) => {
 		const full = file.base.replace('/', '');
 		return contents.includes(full);
 	});
@@ -206,7 +206,7 @@ test('try to render non-existing json file and `stat` errors', async () => {
 
 	// eslint-disable-next-line no-undefined
 	const url = await getUrl(undefined, {
-		lstat: location => {
+		lstat: (location) => {
 			if (path.basename(location) === name && !done) {
 				done = true;
 				throw new Error(message);
@@ -630,7 +630,7 @@ test('receive custom `404.html` error page', async () => {
 test('error is still sent back even if reading `404.html` failed', async () => {
 	// eslint-disable-next-line no-undefined
 	const url = await getUrl(undefined, {
-		lstat: location => {
+		lstat: (location) => {
 			if (path.basename(location) === '404.html') {
 				throw new Error('Any error occured while checking the file');
 			}
@@ -735,7 +735,7 @@ test('set `cleanUrls` config property to empty array', async () => {
 	const type = response.headers.get('content-type');
 	expect(type).toBe('text/html; charset=utf-8');
 
-	expect(contents.every(item => text.includes(item))).toBe(true);
+	expect(contents.every((item) => text.includes(item))).toBe(true);
 });
 
 test('set `cleanUrls` config property to `true` and try with file', async () => {
@@ -769,7 +769,7 @@ test('set `cleanUrls` config property to `true` and not index file found', async
 
 	const {files} = await response.json();
 
-	const existing = files.every(file => {
+	const existing = files.every((file) => {
 		const full = file.base.replace('/', '');
 		return contents.includes(full);
 	});
@@ -784,7 +784,7 @@ test('set `cleanUrls` config property to `true` and an error occurs', async () =
 	const url = await getUrl({
 		cleanUrls: true
 	}, {
-		lstat: location => {
+		lstat: (location) => {
 			if (path.basename(location) === 'index.html') {
 				throw new Error(message);
 			}
@@ -811,7 +811,7 @@ test('error occurs while getting stat of path', async () => {
 
 	// eslint-disable-next-line no-undefined
 	const url = await getUrl(undefined, {
-		lstat: location => {
+		lstat: (location) => {
 			if (path.basename(location) !== '500.html') {
 				throw new Error(message);
 			}
@@ -835,7 +835,7 @@ test('the first `lstat` call should be for a related file', async () => {
 
 	// eslint-disable-next-line no-undefined
 	const url = await getUrl(undefined, {
-		lstat: location => {
+		lstat: (location) => {
 			if (!done) {
 				expect(path.basename(location)).toBe('index.html');
 				done = true;
@@ -853,7 +853,7 @@ test('the `lstat` call should only be made for files and directories', async () 
 
 	// eslint-disable-next-line no-undefined
 	const url = await getUrl(undefined, {
-		lstat: location => {
+		lstat: (location) => {
 			locations.push(location);
 			return fs.lstat(location);
 		}
@@ -861,7 +861,7 @@ test('the `lstat` call should only be made for files and directories', async () 
 
 	await fetch(url);
 
-	expect(locations.some(location => path.basename(location) === '.html')).toBeFalsy();
+	expect(locations.some((location) => path.basename(location) === '.html')).toBeFalsy();
 });
 
 test('error occurs while getting stat of not-found path', async () => {
@@ -870,7 +870,7 @@ test('error occurs while getting stat of not-found path', async () => {
 
 	// eslint-disable-next-line no-undefined
 	const url = await getUrl(undefined, {
-		lstat: location => {
+		lstat: (location) => {
 			if (path.basename(location) === base) {
 				throw new Error(message);
 			}
@@ -911,7 +911,7 @@ test('set `unlisted` config property to array', async () => {
 
 	const {files} = await response.json();
 
-	const existing = files.every(file => {
+	const existing = files.every((file) => {
 		const full = file.base.replace('/', '');
 		return contents.includes(full);
 	});
@@ -1137,7 +1137,7 @@ test('range request without size', async () => {
 	};
 
 	const url = await getUrl(config, {
-		lstat: async location => {
+		lstat: async (location) => {
 			const stats = await fs.lstat(location);
 
 			config.headers.unshift({
