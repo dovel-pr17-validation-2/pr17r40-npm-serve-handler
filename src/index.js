@@ -28,7 +28,7 @@ const calculateSha = (handlers, absolutePath) =>
 		hash.update('-');
 		const rs = handlers.createReadStream(absolutePath);
 		rs.on('error', reject);
-		rs.on('data', buf => hash.update(buf));
+		rs.on('data', (buf) => hash.update(buf));
 		rs.on('end', () => {
 			const sha = hash.digest('hex');
 			resolve(sha);
@@ -116,7 +116,7 @@ const applyRewrites = (requestPath, rewrites = [], repetitive) => {
 	return fallback;
 };
 
-const ensureSlashStart = target => (target.startsWith('/') ? target : `/${target}`);
+const ensureSlashStart = (target) => (target.startsWith('/') ? target : `/${target}`);
 
 const shouldRedirect = (decodedPath, {redirects = [], trailingSlash}, cleanUrl) => {
 	const slashing = typeof trailingSlash === 'boolean';
@@ -276,7 +276,7 @@ const applicable = (decodedPath, configEntry) => {
 const getPossiblePaths = (relativePath, extension) => [
 	path.join(relativePath, `index${extension}`),
 	relativePath.endsWith('/') ? relativePath.replace(/\/$/g, extension) : (relativePath + extension)
-].filter(item => path.basename(item) !== extension);
+].filter((item) => path.basename(item) !== extension);
 
 const findRelated = async (current, relativePath, rewrittenPath, originalStat) => {
 	const possible = rewrittenPath ? [rewrittenPath] : getPossiblePaths(relativePath, '.html');
@@ -537,7 +537,7 @@ const internalError = async (...args) => {
 	return sendError(...args);
 };
 
-const getHandlers = methods => Object.assign({
+const getHandlers = (methods) => Object.assign({
 	lstat: promisify(lstat),
 	realpath: promisify(realpath),
 	createReadStream,
